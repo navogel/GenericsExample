@@ -9,13 +9,18 @@ namespace GenericsExample
 
         public int RecordsPerPage {get; set;} = 5;
 
-        public List<T> AllRecords {get; set;}
+        private List<T> _allRecords;
+
+        public Pager(List<T> allRecords)
+        {
+            _allRecords = allRecords;
+        }
 
         public List<T> GetCurrentPage()
         {
             var skipAmount = CurrentPage * RecordsPerPage;
 
-            return AllRecords
+            return _allRecords
                 .Skip(skipAmount)
                 .Take(RecordsPerPage)
                 .ToList();

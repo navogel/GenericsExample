@@ -67,8 +67,9 @@ namespace GenericsExample
                 new Book { Id = 21, Author = "Franz Kafka", Title = "Stories" },
             };
 
-            var bookPager = new BookPager();
-            bookPager.AllRecords = allBooks;
+            var bookPager = new Pager<Book>(allBooks);
+            var dvdPager = new Pager<DVD>(allMovies);
+            
 
             Console.WriteLine("Which listings would you like to see?");
             Console.WriteLine("1. Movies");
@@ -78,7 +79,27 @@ namespace GenericsExample
 
             if (selection == "1")
             {
-                allMovies.ForEach(m => Console.WriteLine($"{m.Id}:{m.Title} ({m.Genre})"));
+                var dvdPage = dvdPager.GetCurrentPage();
+                dvdPage.ForEach(m => Console.WriteLine($"{m.Id}:{m.Title} ({m.Genre})"));
+                while (true)
+                {
+                    Console.WriteLine("Type next or prev to go forward or back");
+                    var forwardOrBack = Console.ReadLine();
+                    Console.Clear();
+
+                    if (forwardOrBack == "next")
+                    {
+                        var nextPage = dvdPager.GetNextPage();
+                        nextPage.ForEach(m => Console.WriteLine($"{m.Id}:{m.Title} by {m.Genre}"));
+                    }
+                    else if (forwardOrBack == "prev")
+                    {
+                        var prevPage = dvdPager.GetPreviousPage();
+                        prevPage.ForEach(m => Console.WriteLine($"{m.Id}:{m.Title} by {m.Genre}"));
+                    }
+                    else {break;}
+                    
+                }
             }
 
             if (selection == "2")
